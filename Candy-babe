@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>لعبتي لطيبة</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      background: #ffe6f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      color: #ff4081;
+      margin-top: 20px;
+      text-shadow: 1px 1px 2px #fff;
+    }
+
+    #message {
+      font-size: 20px;
+      color: #d63384;
+      margin: 10px;
+      font-weight: bold;
+    }
+
+    #board {
+      display: grid;
+      grid-template-columns: repeat(6, 60px);
+      grid-template-rows: repeat(6, 60px);
+      gap: 5px;
+      margin-top: 20px;
+    }
+
+    .tile {
+      width: 60px;
+      height: 60px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 0 5px #ffb3c6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 32px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .tile:hover {
+      transform: scale(1.1);
+    }
+
+    .heart { color: #ff4d6d; }
+    .cat { color: #ffb347; }
+  </style>
+</head>
+<body>
+  <h1>أهلاً بـ طيبتي</h1>
+  <div id="message">دلوعة كلبي، حاولي تطابقين البزازين والقلوب!</div>
+  <div id="board"></div>
+
+  <script>
+    const board = document.getElementById("board");
+    const emojis = ["❤️", "🐱", "💖", "😽", "💕", "😻"];
+    let selected = [];
+
+    function createBoard() {
+      for (let i = 0; i < 36; i++) {
+        const tile = document.createElement("div");
+        tile.classList.add("tile");
+        const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+        tile.innerText = emoji;
+        tile.dataset.emoji = emoji;
+        tile.addEventListener("click", () => selectTile(tile));
+        board.appendChild(tile);
+      }
+    }
+
+    function selectTile(tile) {
+      if (selected.includes(tile)) return;
+
+      tile.style.border = "2px solid #ff69b4";
+      selected.push(tile);
+
+      if (selected.length === 2) {
+        setTimeout(checkMatch, 500);
+      }
+    }
+
+    function checkMatch() {
+      const [first, second] = selected;
+      if (first.dataset.emoji === second.dataset.emoji) {
+        first.style.opacity = 0.3;
+        second.style.opacity = 0.3;
+        document.getElementById("message").innerText =
+          randomMessage() + "، ممتاز يا حبيبتي!";
+      } else {
+        first.style.border = "none";
+        second.style.border = "none";
+        document.getElementById("message").innerText =
+          "جربي مرة ثانية يا أمورتي!";
+      }
+      selected = [];
+    }
+
+    function randomMessage() {
+      const messages = [
+        "حبيبتي طيبة",
+        "أميرتي الجميلة",
+        "غاليتي وعمري",
+        "دلوعة قلبي",
+        "طيبتي الحلوة"
+      ];
+      return messages[Math.floor(Math.random() * messages.length)];
+    }
+
+    createBoard();
+  </script>
+</body>
+</html>
